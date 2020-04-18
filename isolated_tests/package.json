@@ -1,0 +1,16 @@
+{
+  "name": "ipact_isolated_tests",
+  "version": "1.0.0",
+  "description": "Stand alone node scripts for testing/understaning existing capabilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bleno": "^0.5.0",
+    "bluetooth-hci-socket": "npm:@abandonware/bluetooth-hci-socket@^0.5.3-5",
+    "noble": "^1.9.1"
+  }
+}
