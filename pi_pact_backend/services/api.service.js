@@ -63,7 +63,10 @@ module.exports = {
 				autoAliases: true,
 
 				aliases: {
-					'status': 'system-state.state'
+					'status': 'system-state.state',
+					'scannerStatus': 'scanner.status',
+					'scanner/start': 'scanner.startScanner',
+					'scanner/stop': 'scanner.stopScanner'
 				},
 
 				/** 

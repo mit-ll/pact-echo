@@ -1,23 +1,26 @@
 "use strict";
 const noble = require('noble');
 
-noble.on('discover', (peripheral) => {
-    console.log('DISCOVER %s', peripheral.address);
-})
-
-noble.on('startScan', () => {
-    console.log("STARTING SCAN");
-})
-
-noble.on('stopScan', () => {
-    console.log("ENDING SCAN");
-})
 
 module.exports = {
     name: "scanner",
     
     settings: {
         running: false
+    },
+    created() {
+        noble.on('discover', (peripheral) => {
+            console.log('DISCOVER %s', peripheral.address);
+            this.broker.broadcast("advertisment.received", {advertisement: peripheral});
+        })
+        
+        noble.on('startScan', () => {
+            console.log("STARTING SCAN");
+        })
+        
+        noble.on('stopScan', () => {
+            console.log("ENDING SCAN");
+        })                
     },
 
     actions: {
@@ -31,16 +34,17 @@ module.exports = {
             async handler() {
                     noble.startScanning([], true); //Start scanning with duplicates
                     
-                    this.settings.running = noble.state;
+                    this.settings.running = true;
 
-                return { 'running': this.settings.running}
+                    return { 'running': this.settings.running, 'device': noble.state };
             }
         },
 
         stopScanner: {
             async handler() {
                 noble.stopScanning();
-                this.settings.running = noble.state;
+                this.settings.running = false;
+                return { 'running': this.settings.running, 'device': noble.state };
             }
         }
 
