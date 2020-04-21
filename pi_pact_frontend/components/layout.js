@@ -26,6 +26,11 @@ export default class extends React.Component {
                             <Nav.Link>Status</Nav.Link>
                         </Link>
                     </Nav.Item>
+                    <Nav.Item>
+                        <Link href="/scanner" passHref>
+                            <Nav.Link>Scanner</Nav.Link>
+                        </Link>
+                    </Nav.Item>
                 </Navbar>
                 <React.Fragment>
                     {this.props.children}
