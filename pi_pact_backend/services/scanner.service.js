@@ -1,6 +1,6 @@
 "use strict";
 const noble = require('noble');
-
+const uuid = require('uuid');
 
 module.exports = {
     name: "scanner",
@@ -10,8 +10,16 @@ module.exports = {
     },
     created() {
         noble.on('discover', (peripheral) => {
-            console.log('DISCOVER %s', peripheral.address);
-            this.broker.broadcast("advertisment.received", {advertisement: peripheral});
+            // console.log('DISCOVER %s', peripheral.address);
+            this.broker.broadcast("advertisment.received", {
+                uuid: uuid.v4(),
+                id: peripheral.id,
+                address: peripheral.address,
+                addressType: peripheral.addressType,
+                connectable: peripheral.connectable,
+                advertisement: peripheral.advertisement,
+                rssi: peripheral.rssi
+            });
         })
         
         noble.on('startScan', () => {

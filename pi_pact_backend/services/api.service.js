@@ -66,7 +66,13 @@ module.exports = {
 					'status': 'system-state.state',
 					'scannerStatus': 'scanner.status',
 					'scanner/start': 'scanner.startScanner',
-					'scanner/stop': 'scanner.stopScanner'
+					'scanner/stop': 'scanner.stopScanner',
+
+					'recorderStatus': 'recorder.status',
+					'recorder/start': 'recorder.startRecorder',
+					'recorder/stop': 'recorder.stopRecorder',
+					'recorder/files': 'recorder.listFiles',
+					'recorder/file/:filename': 'recorder.getFile'
 				},
 
 				/** 
