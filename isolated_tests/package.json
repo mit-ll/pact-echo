@@ -13,6 +13,7 @@
     "bluetooth-hci-socket": "npm:@abandonware/bluetooth-hci-socket@^0.5.3-5",
     "line-reader": "^0.4.0",
     "noble": "^1.9.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "ws": "^7.2.3"
   }
 }
