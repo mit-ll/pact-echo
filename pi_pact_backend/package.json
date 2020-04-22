@@ -22,6 +22,7 @@
     "moleculer-repl": "^0.6.2"
   },
   "dependencies": {
+    "bleno": "^0.5.0",
     "bluetooth-hci-socket": "npm:@abandonware/bluetooth-hci-socket@^0.5.3-5",
     "fs": "0.0.1-security",
     "moleculer": "^0.14.0",
