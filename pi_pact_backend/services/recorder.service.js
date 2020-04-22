@@ -11,6 +11,7 @@ module.exports = {
         running: false,
         dataDirectory: '/data',
         logger: null,
+        systemId: null,
     },
 
     events: {
@@ -27,11 +28,22 @@ module.exports = {
         }
     },
 
-    created() {
+    dependencies: [
+        "system-state"
+    ],
+
+    async created() {
+
+    },
+
+    async started() {
         //Start recorder by default?
+        const stateInfo = await this.broker.call('system-state.state');
+        this.settings.systemId = stateInfo.system.serial;
+
 
         const transport = new (winston.transports.DailyRotateFile)({
-            filename: 'pipact-ID-%DATE%.json',
+            filename: `pipact-${this.settings.systemId}-%DATE%.json`,
             dirname: `${this.settings.dataDirectory}`,
             datePattern: 'YYYY-MM-DD-HH-mm',
             frequency: '1m',
@@ -47,10 +59,6 @@ module.exports = {
                 transport
             ]
         })
-    },
-
-    async started() {
-
     },
 
     async stopped() {
@@ -128,19 +136,19 @@ module.exports = {
                 console.log(`F: ${f}`);
                 var fileContents = [];
 
-                
+
                 return new Promise((resolve, reject) => {
                     const rl = readline.createInterface({
                         input: fs.createReadStream(f),
                         output: process.stdout,
                         terminal: false
                     });
-    
+
                     rl.on('line', (line) => {
                         fileContents.push(JSON.parse(line));
                     })
 
-                    rl.on('close',() => {
+                    rl.on('close', () => {
                         resolve(fileContents);
                     })
                 })
