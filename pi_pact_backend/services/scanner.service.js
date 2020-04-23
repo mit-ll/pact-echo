@@ -6,7 +6,9 @@ module.exports = {
     name: "scanner",
     
     settings: {
-        running: false
+        running: false,
+        counter: 0,
+        lastRxTime: null
     },
     created() {
         noble.on('discover', (peripheral) => {
@@ -20,6 +22,9 @@ module.exports = {
                 advertisement: peripheral.advertisement,
                 rssi: peripheral.rssi
             });
+            this.settings.counter = this.settings.counter + 1;
+            const date = new Date();
+            this.settings.lastRxTime = date.getTime(); 
         })
         
         noble.on('startScan', () => {
@@ -34,7 +39,7 @@ module.exports = {
     actions: {
         status: {
             async handler() {
-                return { 'running': this.settings.running, 'device': noble.state };
+                return { 'running': this.settings.running, 'device': noble.state, 'counter': this.settings.counter, 'lastRxTime': this.settings.lastRxTime };
             }
         },
 
