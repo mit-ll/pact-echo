@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import fetcher from '../lib/fetcher'
 import { Table } from 'react-bootstrap'
 import Link from 'next/link'
+import pretty from 'prettysize'
 
 function RecorderFileList({ apiPrefix }) {
     const { data } = useSWR(`${apiPrefix}/recorder/files`, fetcher,
@@ -15,7 +16,7 @@ function RecorderFileList({ apiPrefix }) {
                 <thead>
                     <tr>
                         <td>File</td>
-                        <td>Size (bytes)</td>
+                        <td>Size</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,7 +30,7 @@ function RecorderFileList({ apiPrefix }) {
                                         </a>
                                     </Link>
                                 </td>
-                                <td>{values.fileinfo.size}</td>
+                                <td>{pretty(values.fileinfo.size)}</td>
                             </tr>
                         )
                     })}

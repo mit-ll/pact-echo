@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 import fetcher from '../lib/fetcher'
 import { Table } from 'react-bootstrap'
+import pretty from 'prettysize'
 
 function Status({ d1, url }) {
     const { data, err } = useSWR(url, fetcher,
@@ -32,8 +33,8 @@ function Status({ d1, url }) {
                         <td>{get_uptime_string(uptime)}</td>
                     </tr>
                     <tr>
-                        <td>Memory (bytes) (free/total)</td>
-                        <td>{data.mem.free} / {data.mem.total}</td>
+                        <td>Memory (free/total)</td>
+                        <td>{pretty(data.mem.free)} / {pretty(data.mem.total)}</td>
                     </tr>
                 </tbody>
             </Table>
@@ -59,8 +60,8 @@ function Status({ d1, url }) {
                 <thead>
                     <tr>
                         <th>Storage Device</th>
-                        <th>Size (bytes)</th>
-                        <th>Used (bytes)</th>
+                        <th>Size</th>
+                        <th>Used</th>
                         <th>Used (%)</th>
                     </tr>
                 </thead>
@@ -69,8 +70,8 @@ function Status({ d1, url }) {
                         return (
                             <tr key={index}>
                                 <td>{values.fs}</td>
-                                <td>{values.size}</td>
-                                <td>{values.used}</td>
+                                <td>{pretty(values.size)}</td>
+                                <td>{pretty(values.used)}</td>
                                 <td>{values.use}</td>
                             </tr>
                         )
