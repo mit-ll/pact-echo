@@ -2,6 +2,7 @@ import useSWR from 'swr'
 import fetcher from '../lib/fetcher'
 import React, { useState } from 'react';
 import Switch from 'react-switch';
+import { Table } from 'react-bootstrap';
 
 function Scanner({ initData, statusUrl, startUrl, stopUrl }) {
     const { data, mutate } = useSWR(statusUrl, fetcher,
@@ -29,6 +30,16 @@ function Scanner({ initData, statusUrl, startUrl, stopUrl }) {
         <>
             <h1>Scanner</h1>
             <Switch onChange={toggleScanner} checked={data.running} />
+            <Table>
+                <tr>
+                    <td>RX Count</td>
+                    <td>{data.counter}</td>
+                </tr>
+                <tr>
+                    <td>Last RX Time</td>
+                    <td>{new Date(data.lastRxTime).toUTCString()}</td>
+                </tr>
+            </Table>
         </>
     )
 }
