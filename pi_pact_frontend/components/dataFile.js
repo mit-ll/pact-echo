@@ -1,17 +1,14 @@
 import useSWR from 'swr';
 import fetcher from '../lib/fetcher'
-import {Table} from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 
-function DataFile(props) {
-    console.log(props.filename);
-    const filename = props.filename;
-    const url = `http://192.168.1.83:3000/api/recorder/file/${filename}`;
-    console.log(`ZZZ ${url}`)
-    const {data, error} = useSWR(url, fetcher);
+function DataFile({ filename, filePrefix }) {
+    const url = `${filePrefix}/${filename}`;
+    const { data, error } = useSWR(url, fetcher);
 
-    if(error) console.error(error);
+    if (error) console.error(error);
 
-    if(!data) return <h1>dataFile Loading...</h1>
+    if (!data) return <h1>dataFile Loading...</h1>
 
     return (
         <Table>

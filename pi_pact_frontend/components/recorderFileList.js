@@ -3,8 +3,8 @@ import fetcher from '../lib/fetcher'
 import { Table } from 'react-bootstrap'
 import Link from 'next/link'
 
-function RecorderFileList() {
-    const { data } = useSWR('http://192.168.1.83:3000/api/recorder/files', fetcher,
+function RecorderFileList({ apiPrefix }) {
+    const { data } = useSWR(`${apiPrefix}/recorder/files`, fetcher,
         { refreshInterval: 30000 });
     if (!data) return <h1>Loading...</h1>
 

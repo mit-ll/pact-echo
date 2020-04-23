@@ -2,9 +2,9 @@ import useSWR from 'swr'
 import fetcher from '../lib/fetcher'
 import { Table } from 'react-bootstrap'
 
-function Status() {
-    const { data, err } = useSWR('http://192.168.1.83:3000/api/status', fetcher,
-        { refreshInterval: 5000 });
+function Status({ d1, url }) {
+    const { data, err } = useSWR(url, fetcher,
+        { refreshInterval: 5000, initialData: d1 });
     if (err) return <div>Error {err}</div>
     if (!data) return <div>No data {data} end</div>
     const d = data;

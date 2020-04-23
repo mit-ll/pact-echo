@@ -3,14 +3,14 @@ import fetcher from "../lib/fetcher";
 import Switch from 'react-switch'
 import { Table } from 'react-bootstrap'
 
-function Beacon() {
-    const { data, mutate } = useSWR('http://192.168.1.83:3000/api/beacon/status', fetcher,
-        { refreshInterval: 1000 });
+function Beacon({initData, statusUrl, startUrl, stopUrl}) {
+    const { data, mutate } = useSWR(statusUrl, fetcher,
+        { refreshInterval: 1000, initialData: initData });
 
     if (!data) return <h1>Loading...</h1>
 
     const toggleBeacon = (active) => {
-        let url = `http://192.168.1.83:3000/api/beacon/${active ? 'start' : 'stop'}`;
+        let url = active ? startUrl : stopUrl;
         fetch(url)
             .then(r => r.json())
             .then(d => {

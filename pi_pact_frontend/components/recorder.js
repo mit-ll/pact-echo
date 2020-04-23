@@ -5,9 +5,9 @@ import Switch from 'react-switch'
 import { Table } from 'react-bootstrap'
 import RecorderFileList from './recorderFileList';
 
-function Recorder() {
-    const { data, mutate } = useSWR('http://192.168.1.83:3000/api/recorderStatus', fetcher,
-        { refreshInterval: 1000 });
+function Recorder({ initData, statusUrl, startUrl, stopUrl, apiPrefix }) {
+    const { data, mutate } = useSWR(statusUrl, fetcher,
+        { refreshInterval: 1000, initialData: initData });
 
 
     if (!data) return <h1>Loading...</h1>
@@ -16,7 +16,7 @@ function Recorder() {
     // console.log(filelist);
 
     const toggleRecorder = (active) => {
-        let url = `http://192.168.1.83:3000/api/recorder/${active ? 'start' : 'stop'}`;
+        let url = active ? startUrl : stopUrl;
         fetch(url)
             .then(r => r.json())
             .then(d => {
@@ -37,7 +37,7 @@ function Recorder() {
                     </tr>
                 </tbody>
             </Table>
-            <RecorderFileList />
+            <RecorderFileList apiPrefix={apiPrefix} />
         </>
     )
 }
