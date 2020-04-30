@@ -24,6 +24,7 @@ import Layout from '../components/layout'
 import Beacon from '../components/beacon'
 import fetcher from '../lib/fetcher'
 import getConfig from 'next/config'
+import absoluteUrl from 'next-absolute-url'
 
 export default class extends Page {
     constructor(props) {
@@ -42,11 +43,16 @@ export default class extends Page {
 }
 
 export const getServerSideProps = async context => {
-    const { serverRuntimeConfig, publiRuntimeConfig } = getConfig();
-    const statusUrl = `${serverRuntimeConfig.api_loc}/api/beacon/status`;
-    const startUrl = `${serverRuntimeConfig.api_loc}/api/beacon/start`;
-    const stopUrl = `${serverRuntimeConfig.api_loc}/api/beacon/stop`;
-    const data = await fetcher(statusUrl);
-    const d = { props: { data, statusUrl, startUrl, stopUrl} };
-    return d;
+    const { serverRuntimeConfig } = getConfig();
+    const { host } = absoluteUrl(context.req);
+    const beaconStatusUrl = `http://${host}/api/beacon/status`;
+    const statusUrl = `http://${host}/api/beacon/status`;
+    const startUrl = `http://${host}/api/beacon/start`;
+    const stopUrl = `http://${host}/api/beacon/stop`;
+    try {
+        const data = await fetcher(beaconStatusUrl);
+        return { props: { data, statusUrl, startUrl, stopUrl } };
+    } catch (error) {
+        return { props: { data: error } }
+    }
 }
