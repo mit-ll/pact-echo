@@ -24,6 +24,7 @@ import Layout from '../components/layout'
 import Scanner from '../components/scanner'
 import getConfig from 'next/config'
 import fetcher from '../lib/fetcher'
+import absoluteUrl from 'next-absolute-url'
 
 export default class extends Page {
 
@@ -44,12 +45,16 @@ export default class extends Page {
 }
 
 export const getServerSideProps = async context => {
-    const { serverRuntimeConfig, publiRuntimeConfig } = getConfig();
-    const statusUrl = `${serverRuntimeConfig.api_loc}/api/scannerStatus`;
-    const startUrl = `${serverRuntimeConfig.api_loc}/api/scanner/start`;
-    const stopUrl = `${serverRuntimeConfig.api_loc}/api/scanner/stop`;
-    const data = await fetcher(statusUrl);
-    const d = { props: { data, statusUrl, startUrl, stopUrl} };
-    // console.log("PRE: %s", JSON.stringify(d));
-    return d;
+    const { serverRuntimeConfig } = getConfig();
+    const { host } = absoluteUrl(context.req);
+    const scannerStatusUrl = `${serverRuntimeConfig.api_loc}/api/scannerStatus`;
+    const statusUrl = `http://${host}/api/scanner/status`;
+    const startUrl = `http://${host}/api/scanner/start`;
+    const stopUrl = `http://${host}/api/scanner/stop`;
+    try {
+        const data = await(fetcher(scannerStatusUrl));
+        return {props: {data, statusUrl, startUrl, stopUrl}};
+    } catch (error) {
+        return {props: {data: error}};
+    }
 }
