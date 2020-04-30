@@ -47,15 +47,15 @@ export default class extends Page {
 export const getServerSideProps = async context => {
     const { serverRuntimeConfig } = getConfig();
     // console.log("Absolute: %s", JSON.stringify(absoluteUrl(context.req)))
-    const {host} = absoluteUrl(context.req);
+    const { host } = absoluteUrl(context.req);
     const systemStatusUrl = `${serverRuntimeConfig.api_loc}/api/status`;
     const url = `http://${host}/api/status`;
     // console.log("SSU %s", systemStatusUrl);
     try {
         const data = await fetcher(systemStatusUrl);
         return { props: { data, url } };
-    } catch(error) {
+    } catch (error) {
         // console.error("Foo: %s", error);
-        return {props: {data: error}};
+        return { props: { data: error } };
     }
 }

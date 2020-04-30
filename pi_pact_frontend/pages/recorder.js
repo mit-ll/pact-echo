@@ -24,6 +24,7 @@ import Layout from '../components/layout'
 import Recorder from '../components/recorder'
 import getConfig from 'next/config'
 import fetcher from '../lib/fetcher'
+import absoluteUrl from 'next-absolute-url'
 
 export default class extends Page {
 
@@ -43,12 +44,18 @@ export default class extends Page {
 }
 
 export const getServerSideProps = async context => {
-    const { serverRuntimeConfig, publiRuntimeConfig } = getConfig();
-    const statusUrl = `${serverRuntimeConfig.api_loc}/api/recorderStatus`;
-    const stopUrl = `${serverRuntimeConfig.api_loc}/api/recorder/stop`;
-    const startUrl = `${serverRuntimeConfig.api_loc}/api/recorder/start`;
-    const apiPrefix = `${serverRuntimeConfig.api_loc}/api`;
+    const { serverRuntimeConfig } = getConfig();
+    const { host } = absoluteUrl(context.req);
+    const recorderStatusUrl = `${serverRuntimeConfig.api_loc}/api/recorderStatus`;
+    const statusUrl = `http://${host}/api/recorder/status`;
+    const stopUrl = `http://${host}/api/recorder/stop`;
+    const startUrl = `http://${host}/api/recorder/start`;
+    const apiPrefix = `http://${host}/api`;
     const data = await fetcher(statusUrl);
-    const d = { props: { data, statusUrl, startUrl, stopUrl, apiPrefix } };
-    return d;
+    try {
+        const data = await fetcher(recorderStatusUrl);
+        return { props: { data, statusUrl, startUrl, startUrl, apiPrefix } };
+    } catch (error) {
+        return { props: { data: error } };
+    }
 }
