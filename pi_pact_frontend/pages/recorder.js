@@ -54,7 +54,7 @@ export const getServerSideProps = async context => {
     const data = await fetcher(statusUrl);
     try {
         const data = await fetcher(recorderStatusUrl);
-        return { props: { data, statusUrl, startUrl, startUrl, apiPrefix } };
+        return { props: { data, statusUrl, startUrl, stopUrl, apiPrefix } };
     } catch (error) {
         return { props: { data: error } };
     }

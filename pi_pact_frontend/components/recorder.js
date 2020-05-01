@@ -21,19 +21,17 @@
 import useSWR from 'swr';
 import fetcher from '../lib/fetcher'
 import React, { useState } from 'react'
-import Switch from 'react-switch'
-import { Table } from 'react-bootstrap'
+import SwitchWithError from '../components/switchWithError'
+import { Table, Alert } from 'react-bootstrap'
 import RecorderFileList from './recorderFileList';
 
 function Recorder({ initData, statusUrl, startUrl, stopUrl, apiPrefix }) {
+    const [curError, setCurError] = useState(null);
     const { data, mutate } = useSWR(statusUrl, fetcher,
         { refreshInterval: 1000, initialData: initData });
 
 
     if (!data) return <h1>Loading...</h1>
-
-    // console.log(data);
-    // console.log(filelist);
 
     const toggleRecorder = (active) => {
         let url = active ? startUrl : stopUrl;
@@ -41,13 +39,16 @@ function Recorder({ initData, statusUrl, startUrl, stopUrl, apiPrefix }) {
             .then(r => r.json())
             .then(d => {
                 mutate({ ...data, running: d.running });
+            }).catch((error) => {
+                console.error("E: %s", error);
+                setCurError(error);
             });
     }
 
     return (
         <>
             <h1>Recorder</h1>
-            <Switch onChange={toggleRecorder} checked={data.running} />
+            <SwitchWithError onChange={toggleRecorder} checked={data.running} curError={curError} setCurError={setCurError} what="recorder"/>
             <h1>Info</h1>
             <Table>
                 <tbody>
