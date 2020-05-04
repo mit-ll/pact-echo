@@ -66,6 +66,7 @@ module.exports = {
             filename: `pipact-${this.settings.systemId}-%DATE%.json`,
             dirname: `${this.settings.dataDirectory}`,
             datePattern: 'YYYY-MM-DD-HH-mm',
+            utc: true,
             frequency: '1m',
 
         })
