@@ -22,7 +22,7 @@ import {useRouter} from 'next/router'
 import Layout from '../../components/layout'
 import DataFile from '../../components/dataFile'
 import {Container} from 'react-bootstrap'
-import getConfig from 'next/config'
+import absoluteUrl from 'next-absolute-url';
 
 const FileView = (props) => {
     const router = useRouter();
@@ -41,10 +41,9 @@ const FileView = (props) => {
 }
 
 export const getServerSideProps = async context => {
-    const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
-    const filePrefix = `${serverRuntimeConfig.api_loc}/api/recorder/file`;
-    const d = { props: { filePrefix } };
-    return d;
+    const { host } = absoluteUrl(context.req);
+    const filePrefix = `http://${host}/api/recorder/file`;
+    return { props: { filePrefix } };
 }
 
 export default FileView;
