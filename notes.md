@@ -7,6 +7,6 @@
     * Issue: [Doesn't compile on RPi 3B+](https://github.com/noble/node-bluetooth-hci-socket/issues/107)
         * `npm install bluetooth-hci-socket@npm:@abandonware/bluetooth-hci-socket`
 ## Node
-* [How to Updgrade or Downgrade Nodejs Using npm](https://www.surrealcms.com/blog/how-to-upgrade-or-downgrade-nodejs-using-npm.html)n
+* [How to Updgrade or Downgrade Nodejs Using npm](https://www.surrealcms.com/blog/how-to-upgrade-or-downgrade-nodejs-using-npm.html)
 ## System Prerequisits
 * `sudo apt-get install bluetooth bluez libbluetooth-dev libudev-dev`
