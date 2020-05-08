@@ -61,6 +61,11 @@ export default class extends React.Component {
                             <Nav.Link>Beacon</Nav.Link>
                         </Link>
                     </Nav.Item>
+                    <Nav.Item>
+                        <Link href="/position" passHref>
+                            <Nav.Link>Position</Nav.Link>
+                        </Link>
+                    </Nav.Item>
                 </Navbar>
                 <React.Fragment>
                     {this.props.children}
