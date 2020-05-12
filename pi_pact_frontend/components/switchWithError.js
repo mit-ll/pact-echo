@@ -18,32 +18,24 @@
  *  that exist in this work.
  */
 
-import {useRouter} from 'next/router'
-import Layout from '../../components/layout'
-import DataFile from '../../components/dataFile'
-import {Container} from 'react-bootstrap'
-import absoluteUrl from 'next-absolute-url';
+import Switch from 'react-switch'
+import { Alert } from 'react-bootstrap'
 
-const FileView = (props) => {
-    const router = useRouter();
-    const {filename} = router.query;
- 
-    if (filename===undefined) return (<h1>Filename Loading...</h1>)
-
+function SwitchWithError({ onChange, checked, curError, setCurError, what }) {
     return (
-        <Layout {...props} >
-            <Container>
-                <DataFile filename={filename} filePrefix={props.filePrefix}/>
-            </Container>
-        </Layout>
+        <>
+            <Switch onChange={onChange} checked={checked} />
+            {curError &&
+                <Alert variant="danger" onClose={() => setCurError(null)} dismissible>
+                    <Alert.Heading>Error!</Alert.Heading>
+                    <p>
+                        Could not toggle {what} state
+                    </p>
+                </Alert>
+
+            }
+        </>
     )
-
 }
 
-export const getServerSideProps = async context => {
-    const { host } = absoluteUrl(context.req);
-    const filePrefix = `http://${host}/api/recorder/file`;
-    return { props: { filePrefix } };
-}
-
-export default FileView;
+export default SwitchWithError;

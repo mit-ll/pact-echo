@@ -18,32 +18,9 @@
  *  that exist in this work.
  */
 
-import {useRouter} from 'next/router'
-import Layout from '../../components/layout'
-import DataFile from '../../components/dataFile'
-import {Container} from 'react-bootstrap'
-import absoluteUrl from 'next-absolute-url';
+// api/scanner/stop
+import api_proxy from '../../../lib/api_proxy'
 
-const FileView = (props) => {
-    const router = useRouter();
-    const {filename} = router.query;
- 
-    if (filename===undefined) return (<h1>Filename Loading...</h1>)
-
-    return (
-        <Layout {...props} >
-            <Container>
-                <DataFile filename={filename} filePrefix={props.filePrefix}/>
-            </Container>
-        </Layout>
-    )
-
+export default async (req, res) => {
+    api_proxy(req, res, 'scanner/stop');
 }
-
-export const getServerSideProps = async context => {
-    const { host } = absoluteUrl(context.req);
-    const filePrefix = `http://${host}/api/recorder/file`;
-    return { props: { filePrefix } };
-}
-
-export default FileView;
