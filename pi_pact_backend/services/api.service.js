@@ -97,6 +97,10 @@ module.exports = {
 					'beacon/status': 'beacon.status',
 					'beacon/start': 'beacon.startBeacon',
 					'beacon/stop': 'beacon.stopBeacon',
+
+					'position/status': 'position.status',
+					'position/start': 'position.start',
+					'position/stop': 'position.stop',
 				},
 
 				/** 
