@@ -20,6 +20,8 @@
 
 "use strict";
 const si = require('systeminformation');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 
 module.exports = {
@@ -32,15 +34,31 @@ module.exports = {
     actions: {
         state: {
             async handler() {
-                return { 
-                    'status': 'online', 
-                    'time': await si.time(), 
-                    'system': await si.system(), 
+                return {
+                    'status': 'online',
+                    'time': await si.time(),
+                    'system': await si.system(),
                     'os': await si.osInfo(),
                     'storage': await si.fsSize(),
                     'scanner': await this.broker.call('scanner.status'),
-                    'mem': await si.mem()};
+                    'mem': await si.mem(), 
+                    'rf': await this.check_rf_kill()
+                };
             }
+        }
+    },
+    methods: {
+        async check_rf_kill() {
+            var data = {};
+            const { stdout } = await exec("rfkill --json");
+            const output = JSON.parse(stdout);
+            const responses = output[''];
+            for (var i = 0; i < responses.length; i++) {
+                data[responses[i]['type']] = { 
+                    soft: responses[i].soft, 
+                    hard: responses[i].hard };
+            }
+            return data;
         }
     }
 }

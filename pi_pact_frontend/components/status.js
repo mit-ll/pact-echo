@@ -58,6 +58,28 @@ function Status({ d1, url }) {
                     </tr>
                 </tbody>
             </Table>
+            <h1>Wireless - RF Kill</h1>
+            <Table>
+                <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>Soft</td>
+                        <td>Kill</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>WLAN</td>
+                        <td>{data.rf.wlan.soft}</td>
+                        <td>{data.rf.wlan.hard}</td>
+                    </tr>
+                    <tr>
+                        <td>Bluetooth</td>
+                        <td>{data.rf.bluetooth.soft}</td>
+                        <td>{data.rf.bluetooth.hard}</td>
+                    </tr>
+                </tbody>
+            </Table>
             <h1>Operating System</h1>
             <Table>
                 <tbody>
