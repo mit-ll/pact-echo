@@ -20,6 +20,8 @@
 "use strict";
 
 const rpio = require('rpio');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 module.exports = {
     name: "gpio",
@@ -34,6 +36,8 @@ module.exports = {
 
     async started() {
         rpio.init({ mapping: 'gpio' });
+        rpio.open(this.settings.wifi_pin, rpio.INPUT, rpio.PULL_UP);
+        rpio.poll(this.settings.wifi_pin, this.toggle_wifi);
         rpio.open(this.settings.yellow_pin, rpio.OUTPUT, rpio.LOW);
         rpio.open(this.settings.red_pin, rpio.OUTPUT, rpio.LOW);
         rpio.open(this.settings.green_pin, rpio.OUTPUT, rpio.LOW);
@@ -123,6 +127,22 @@ module.exports = {
             setTimeout(this.pin_off, 1500, this.settings.green_pin);
             setTimeout(this.pin_off, 1500, this.settings.yellow_pin);
             setTimeout(this.pin_off, 1500, this.settings.red_pin);
+        },
+
+        async toggle_wifi(cbpin) {
+            if (rpio.read(cbpin)) {
+                console.log("Button released");
+                //Get current state
+                const system_state = await this.broker.call('system-state.state');
+                console.log('Toggle State: %s', system_state);
+                if (system_state.rf.wlan.soft == 'unblocked') {
+                    //Disable WLAN
+                    await exec("rfkill block wlan");
+                } else {
+                    //Enable WLAN
+                    await exec("rfkill unblock wlan");
+                }
+            }
         }
     }
 
