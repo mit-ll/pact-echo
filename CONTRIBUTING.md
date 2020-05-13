@@ -1,4 +1,4 @@
-# How to contribute
+# How to contribute ##
 
 We encourage the use of the [GitHub Issues](https://guides.github.com/features/issues/) for bug reports, new feature requests, etc. To streamline reporting, issues will only be enabled for the [pact-echo](https://github.com/mit-ll/pact-echo/) repository.
 
@@ -37,78 +37,78 @@ No public technology roadmap for development is available yet. As the project ma
 
 ## Workflow ##
 
-A variety of organizations from academia, federal agencies, federally funded research and development centers (FFRDC), and industry are supporting or plan to support the development of this project. Each organization has different policies on release review and procedures to disseminate content. Organizations may also have their own enterprise self-hosted version control systems.
+A variety of organizations from academia, federal agencies, federal funded research and development centers (FFRDC), and industry have supported data collection for PACT. Each organization has different policies on release review and procedures to disseminate content. Organizations may also have their own enterprise self-hosted version control systems.
 
-We recommend the following workflow that perseveres content part of the [pact-echo](https://github.com/mit-ll/pact-echo) organization as a "gold benchmark" while promoting a traceable workflow for contributors.
+We recommend the following workflow that perseveres content part of the [pact-echo](https://github.com/mit-ll/pact-echo) repository as a "gold benchmark" while promoting a traceable workflow for contributors.
 
 ![Workflow](images/workflow.png)
 
-We'll use an illustrative example with MIT Lincoln Laboratory, a FFRDC with strict release review policies, with their public [mit-ll](https://github.com/mit-ll) organization and a private enterprise system to explain this workflow. For organizations that permit public development, ignore steps with the enterprise instance.
+We'll use an illustrative example with an organization with strict release review policies, with their public organization (*your-org*) and a private enterprise system to explain this workflow. For organizations that permit public development, ignore steps with the enterprise instance.
 
 1. The repository required for development is identified in [pact-echo](https://github.com/mit-ll/pact-echo)
-2. This repository is forked by the [mit-ll](https://github.com/mit-ll) organization.
-3. The new repository on [mit-ll](https://github.com/mit-ll) organization is cloned by the enterprise self-hosted GitHub. Note you can't fork from public to private, see this Stack Overflow question for mitigations: [Is it possible to fork a public GitHub repo into an enterprise repository?](https://stackoverflow.com/q/29952033)
-- Prior to any changes, there are now three instances of the repository: a private enterprise clone (pact-echo-internal), a public fork ([mit-ll](https://github.com/mit-ll)), and the original ([pact-echo](https://github.com/mit-ll/pact-echo)).
+2. This repository is forked by the *your-org* organization.
+3. The new repository on *your-org* organization is cloned by the enterprise self-hosted GitHub. Note: you can't fork from public to private, see this Stack Overflow question for mitigations: [Is it possible to fork a public GitHub repo into an enterprise repository?](https://stackoverflow.com/q/29952033)
+- Prior to any changes, there are now three instances of the repository: a private enterprise clone (pact-echo-internal), a public fork (your-org/pact-echo), and the original ([pact-echo](https://github.com/mit-ll/pact-echo)).
 4. Development is conducted using branches on the enterprise clone.
-5. When development is over, the clone will be released review according to internal policies.
+5. When development is over, the clone will be reviewed for release according to internal policies.
 6. Once the clone is approved for public release, changes will be pushed to the public fork.
 7. A pull request will be opened to contribute back to the original.
-8. The encounter model administrators will review the pull request and either accept or reject it.
+8. The pact-echo administrators will review the pull request and either accept or reject it.
 
-## Bugs
+## Bugs ##
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Software_bug), a software bug is a:
 > A software bug is an error, flaw, failure or fault in a computer program or system that causes it to produce an incorrect or unexpected result, or to behave in unintended ways.
 
-### Reporting Bugs
+### Reporting Bugs ###
 
 - **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/mit-ll/pact-echo/issues).
 - If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/mit-ll/pact-echo/issues) using the [bug report](.github/ISSUE_TEMPLATE/bug_report.md) template. Be sure to include a title, a clear description, and as much relevant information as possible.
 - Confirm that the bug report template assigned a BUG label to the issue.
 
-### Patching Bugs
+### Patching Bugs ###
 
 - Open a new GitHub pull request with the patch.
 - Ensure the pull request description clearly describes the problem and solution. Include the relevant issue number if applicable.
 - Before submitting, please read the [convention guide](#convention-guide) to know more about coding conventions and recommended units.
 
-### Cosmetic Patch
+### Cosmetic Patch ###
 
 Changes that are cosmetic in nature, such as fixing whitespaces characters or formatting code, and do not add anything substantial to the stability, functionality, or testability will generally not be accepted. Our rational aligns with those expressed by the [Ruby on Rails team](https://github.com/rails/rails/pull/13771#issuecomment-32746700).
 
-## Enhancements and New Features
+## Enhancements and New Features ###
 
 According to [Wikipedia](https://en.wikipedia.org/wiki/Software_feature) and IEEE 829, a software feature is a:
 > A distinguishing characteristic of a software item (e.g., performance, portability, or functionality.
 
-### Requesting features
+### Requesting features ###
 
-- **Ensure the feature was not already requested** by searching on GitHub under [Issues](https://github.com/mit-ll/pact-echo/em-overview/issues).
-- If you're unable to find an open issue for the desired feature, [open a new one](https://github.com/mit-ll/pact-echo/em-overview/issues) using the [feature request](.github/ISSUE_TEMPLATE/feature_request.md) template. Be sure to include a title, a clear description, and as much relevant information as possible.
+- **Ensure the feature was not already requested** by searching on GitHub under [Issues](https://github.com/mit-ll/pact-echo/issues).
+- If you're unable to find an open issue for the desired feature, [open a new one](https://github.com/mit-ll/pact-echo/issues) using the [feature request](.github/ISSUE_TEMPLATE/feature_request.md) template. Be sure to include a title, a clear description, and as much relevant information as possible.
 - Confirm that the feature request template assigned an ENHANCEMENT label to the issue.
 
-### Developing features
+### Developing features ###
 
 - Fork the repository associated with the feature request and develop the desired capabilities
 - Open a new GitHub pull request with the enhancement
 - Ensure the pull request description clearly addresses the feature request. Include the relevant issue number. Unlike bugs, enhancements without a traceable issue number will not have the pull request accepted.
 - Before submitting, please read the [convention guide](#convention-guide) to know more about coding conventions and recommended units. Some documentation and code commenting is required for the pull request to be accepted too.
 
-### Requesting documentation
+### Requesting documentation ###
 
 Requesting more or a clarification of documentation is a valid feature request. Note as a community development project, it would be nearly impossible to enforce authors of a specific piece of code to respond to the documentation request.
 
-## Convention Guide
+## Convention Guide ##
 
-### Character Encoding
+### Character Encoding ###
 
 To facilitate cross-platform compatibility, please use UTF-8 or ASCII. Note that UTF-8 is backwards compatible with ASCII.
 
-### Documentation
+### Documentation ###
 
 **Pull requests with no documentation will be rejected.** We believe documentation is good and integral to the success of a community software project. However, we recognize that everyone has different expectations and opinions on code documentation. [Self-documenting code](https://en.wikipedia.org/wiki/Self-documenting_code) should be sufficient in most cases but the use of inline comments to organize blocks of code are encouraged.
 
-### End of Line
+### End of Line ###
 
 To facilitate cross-platform compatibility, please use unix style line endings of `LF (\n)`. For three popular text editors, here are instructions on how to enable `LF` endings.
 
@@ -116,23 +116,7 @@ To facilitate cross-platform compatibility, please use unix style line endings o
 - [Notepad++: Preferences](https://stackoverflow.com/q/8195839)
 - [VS Code: User Preferences](https://stackoverflow.com/q/52404044)
 
-### System Environment Variables
-
-Persistent system environment variables are used to when referencing across and within repositories. They should follow a naming convention of `AEM_TYPE_DESCRIPTION`.
-
-- Persistent system variables should be written using all capital letters
-- Strings should be delimitated by an underscore, `_`
-- A prefix of `AEM` should always be used for software within this organization
-- The second string should describe what the variable references. Use `DIR` for directories; `FILE` for files; and `SCRIPT` for shell scripts.
-- The third string should provide additional descriptive information.
-
-### Variable Names
-
-- When applicable, variable names should include units, such as `speed_kt` or `el_ft_msl`. 
-- Delimiter-separated words should use an underscore, `_`
-- Variable names should be short yet meaningful. The choice of a variable name should be mnemonic — that is, designed to indicate to the casual observer the intent of its use. One-character variable names should be avoided except for temporary "throwaway" variables. Common names for temporary variables are `i`, `j`, `k`.
-
-### Colors
+### Colors ###
 
 To promote accessibility and align with graphic best practices, we recommend a color guidelines proposed by B. Wong that is perceived as reasonably distinct by both normal and color blind individuals. Selecting a widely perceived color scheme is particularly important for peer reviews, as B. Wong notes:
 
