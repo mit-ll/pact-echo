@@ -62,8 +62,8 @@ According to [Wikipedia](https://en.wikipedia.org/wiki/Software_bug), a software
 
 ### Reporting Bugs
 
-- **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/mit-ll/pact-echo/em-overview/issues).
-- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/mit-ll/pact-echo/em-overview/issues) using the [bug report](.github/ISSUE_TEMPLATE/bug_report.md) template. Be sure to include a title, a clear description, and as much relevant information as possible.
+- **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/mit-ll/pact-echo/issues).
+- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/mit-ll/pact-echo/issues) using the [bug report](.github/ISSUE_TEMPLATE/bug_report.md) template. Be sure to include a title, a clear description, and as much relevant information as possible.
 - Confirm that the bug report template assigned a BUG label to the issue.
 
 ### Patching Bugs
@@ -131,26 +131,6 @@ Persistent system environment variables are used to when referencing across and 
 - When applicable, variable names should include units, such as `speed_kt` or `el_ft_msl`. 
 - Delimiter-separated words should use an underscore, `_`
 - Variable names should be short yet meaningful. The choice of a variable name should be mnemonic — that is, designed to indicate to the casual observer the intent of its use. One-character variable names should be avoided except for temporary "throwaway" variables. Common names for temporary variables are `i`, `j`, `k`.
-
-### Units
-
-We employ units commonly used by the United States aviation community. We strongly recommend converting to these units as soon as possible when reading in data. We discourage converting to a different units within stand alone functions or as part of intermediate code. **Excess use of non U.S. aviation units may prompt a rejection of a pull request.**
-
-For more information, refer to Aviation Stackexchange: "[Why doesn't the aviation industry use SI units?](https://aviation.stackexchange.com/q/2572)" and "[What is the measurement system used in the aviation industry?](https://aviation.stackexchange.com/q/2566)"
-
-Dimension | Unit
------------- | -------------
-time | [second (s)](https://en.wikipedia.org/wiki/Second)
-length - altitude & elevation | [foot (ft)](https://en.wikipedia.org/wiki/Foot_(unit))
-length - longitudinal and lateral distance | [foot (ft)](https://en.wikipedia.org/wiki/Foot_(unit)) or [nautical mile (nm)](https://en.wikipedia.org/wiki/Nautical_mile)
-speed - vertical rate | [foot per second (fps)](https://en.wikipedia.org/wiki/Foot_per_second)
-speed - airspeed or ground speed | [knot (kts)](https://en.wikipedia.org/wiki/Knot_(unit))
-plane angle - course, heading, roll, pitch, yaw | [degree (deg)](https://en.wikipedia.org/wiki/Degree_(angle))
-latitude & longitude coordinates | [decimal degrees (DD)](https://en.wikipedia.org/wiki/Decimal_degrees)
-world geodetic system | [WGS 84 (EPSG:4326)](https://epsg.io/4326)
-mass | [pound mass (lb)](https://en.wikipedia.org/wiki/Pound_(mass))
-force | [pound force (lbf)](https://en.wikipedia.org/wiki/Pound_(force))
-temperature | [degree Fahrenheit (°F)](https://en.wikipedia.org/wiki/Fahrenheit)
 
 ### Colors
 
