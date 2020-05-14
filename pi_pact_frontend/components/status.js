@@ -56,6 +56,10 @@ function Status({ d1, url }) {
                         <td>Memory (free/total)</td>
                         <td>{pretty(data.mem.free)} / {pretty(data.mem.total)}</td>
                     </tr>
+                    <tr>
+                        <td>hci0 MAC (Bluetooth)</td>
+                        <td>{data.bt.hci0}</td>
+                    </tr>
                 </tbody>
             </Table>
             <h1>Wireless - RF Kill</h1>

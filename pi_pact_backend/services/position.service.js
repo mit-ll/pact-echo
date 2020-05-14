@@ -15,7 +15,8 @@ module.exports = {
         dataDirectory: '/position',
         logger: null,
         messageCount: 0,
-        lastMessage: null
+        lastMessage: null,
+        rxMac: null,
     },
 
     dependencies: [
@@ -26,7 +27,7 @@ module.exports = {
         //Start recorder by default?
         const stateInfo = await this.broker.call('system-state.state');
         this.settings.systemId = stateInfo.system.serial;
-
+        this.settings.rxMac = stateInfo.bt.hci0;
         const transport = new (winston.transports.DailyRotateFile)({
             filename: `pipact-${this.settings.systemId}-%DATE%.json`,
             dirname: `${this.settings.dataDirectory}`,
@@ -95,7 +96,8 @@ module.exports = {
                 // console.log(msg);
                 this.settings.logger.log({
                     level: 'info',
-                    message: msg
+                    message: msg,
+                    rxMac: this.settings.rxMac
                 });
                 this.settings.messageCount = this.settings.messageCount + 1;
                 this.settings.lastMessage = msg;

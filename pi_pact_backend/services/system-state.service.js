@@ -41,8 +41,9 @@ module.exports = {
                     'os': await si.osInfo(),
                     'storage': await si.fsSize(),
                     'scanner': await this.broker.call('scanner.status'),
-                    'mem': await si.mem(), 
-                    'rf': await this.check_rf_kill()
+                    'mem': await si.mem(),
+                    'rf': await this.check_rf_kill(),
+                    'bt': await this.get_bt_mac()
                 };
             }
         }
@@ -54,11 +55,25 @@ module.exports = {
             const output = JSON.parse(stdout);
             const responses = output[''];
             for (var i = 0; i < responses.length; i++) {
-                data[responses[i]['type']] = { 
-                    soft: responses[i].soft, 
-                    hard: responses[i].hard };
+                data[responses[i]['type']] = {
+                    soft: responses[i].soft,
+                    hard: responses[i].hard
+                };
             }
             return data;
+        },
+
+        async get_bt_mac() {
+            const { stdout } = await exec("hcitool dev");
+            const lines = stdout.split('\n');
+            const re = /hci0/;
+            const mac = /[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}$/g;
+            for (var i = 0; i < lines.length; i++) {
+                if (re.test(lines[i])) {
+                    const e = mac.exec(lines[i]);
+                    return {'hci0': e[0]};
+                }
+            }
         }
     }
 }

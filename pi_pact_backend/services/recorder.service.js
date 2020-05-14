@@ -32,6 +32,7 @@ module.exports = {
         dataDirectory: '/data',
         logger: null,
         systemId: null,
+        rxMac: null
     },
 
     events: {
@@ -40,10 +41,9 @@ module.exports = {
                 console.log("RECORD Advertisment received!")
                 this.settings.logger.log({
                     level: 'info',
-                    message: ctx.params
+                    message: ctx.params,
+                    rxMac: this.settings.rxMac
                 })
-            } else {
-                console.log("DROP Advertisment received!")
             }
         }
     },
@@ -60,7 +60,7 @@ module.exports = {
         //Start recorder by default?
         const stateInfo = await this.broker.call('system-state.state');
         this.settings.systemId = stateInfo.system.serial;
-
+        this.settings.rxMac = stateInfo.bt.hci0;
 
         const transport = new (winston.transports.DailyRotateFile)({
             filename: `pipact-${this.settings.systemId}-%DATE%.json`,
