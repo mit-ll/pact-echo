@@ -44,7 +44,7 @@ function DataFile({ filename, filePrefix }) {
                 {
                     data.map((values, index) => {
                         return (
-                            <tr key={values.uuid}>
+                            <tr key={values.message.uuid}>
                                 <td>{values.timestamp}</td>
                                 <td>{values.message.address}</td>
                                 <td>{values.message.rssi}</td>
