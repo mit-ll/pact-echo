@@ -1,0 +1,10 @@
+[Unit]
+Description=PiPACT Backend Service
+
+[Service]
+ExecStart=/home/pi/pipact/pi_pact_backend/node_modules/moleculer/bin/moleculer-runner.js moleculer-runner --repl --hot /home/pi/pipact/pi_pact_backend/services/**/*.service.js
+User=nodejs
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

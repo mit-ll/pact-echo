@@ -1,0 +1,11 @@
+[Unit]
+Description=PiPACT Frontend Service
+
+[Service]
+Environment=BASE_PATH=/app
+ExecStart=/home/pi/pipact/pi_pact_frontend/node_modules/next/dist/bin/next start /home/pi/pipact/pi_pact_frontend/ -p 3030
+User=nodejs
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

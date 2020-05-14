@@ -1,0 +1,60 @@
+- name: Install unzip
+  apt:
+    name: unzip
+    state: present
+  become: yes  
+
+- name: Download and unpack nats server to /opt/nats-2.1.6 for armv7l
+  unarchive: 
+    src: https://github.com/nats-io/nats-server/releases/download/v2.1.6/nats-server-v2.1.6-linux-arm7.zip
+    dest: /opt/
+    validate_certs: no
+    remote_src: yes
+  when: ansible_architecture == "armv7l"
+  become: yes 
+
+- name: Setup link to current nats version
+  file: 
+    src: "{{ nats_dir }}"
+    dest: /opt/nats
+    state: link
+  become: yes
+  when: ansible_architecture == "armv7l"
+
+
+- name: Copy NATS service file
+  copy:
+    src: nats.service 
+    dest: /etc/systemd/system/nats.service
+  become: yes
+
+- name: Ensure nats group exists
+  group:
+    name: nats
+    state: present
+  become: yes
+
+- name: Create system user for nats
+  user: 
+    name: nats
+    create_home: no
+    shell: /bin/false
+    system: yes
+    group: nats
+  become: yes 
+
+- name: Change ownership of nats service directory
+  file:
+    path: "{{ nats_dir }}"
+    owner: nats
+    group: nats 
+    recurse: true
+  become: yes 
+
+- name: Enable NATS service at startup
+  systemd:
+    name: nats 
+    enabled: yes 
+    daemon_reload: yes
+    state: started
+  become: yes

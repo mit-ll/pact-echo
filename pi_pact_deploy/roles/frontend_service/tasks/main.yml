@@ -1,0 +1,20 @@
+- name: Install npm dependencies
+  npm: 
+    path: /home/pi/pipact/pi_pact_frontend
+
+- name: Build front end app 
+  command: /home/pi/pipact/pi_pact_frontend/node_modules/next/dist/bin/next build /home/pi/pipact/pi_pact_frontend/
+
+- name: Copy pipact_frontend service file
+  copy:
+    src: pipact_frontend.service
+    dest: /etc/systemd/system/pipact_frontend.service
+  become: yes
+
+- name: Enable pipact_frontend service at startup
+  systemd:
+    name: pipact_frontend
+    enabled: yes 
+    daemon_reload: yes
+    state: started
+  become: yes

@@ -1,0 +1,28 @@
+- name: Update system
+  apt:
+    update_cache: yes 
+    upgrade: dist 
+  become: yes 
+  
+- name: Ensure nodejs group exists
+  group:
+    name: nodejs
+    state: present
+  become: yes
+
+- name: Create system user for nodejs
+  user: 
+    name: nodejs
+    create_home: no
+    shell: /bin/false
+    system: yes
+    group: nodejs
+  become: yes 
+
+- name: Create log directory for pipact
+  file:
+    path: /var/log/pipact
+    state: directory
+    owner: nodejs 
+    group: nodejs 
+  become: yes

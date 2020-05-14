@@ -1,0 +1,35 @@
+- name: Install necessary bluetooth libraries
+  apt: 
+    name: [bluetooth, bluez, libbluetooth-dev, libudev-dev, libcap2-bin]
+  become: yes
+
+- name: Grant node process access for cap_net_raw
+  command: setcap cap_net_raw+eip /usr/bin/node
+  become: yes
+
+- name: Install npm dependencies
+  npm: 
+    path: /home/pi/pipact/pi_pact_backend
+
+- name: Copy pipact_backend service file
+  copy:
+    src: pipact_backend.service
+    dest: /etc/systemd/system/pipact_backend.service
+  become: yes
+
+- name: Create data directory
+  file:
+    path: /data
+    state: directory
+    owner: nodejs
+    group: nodejs
+  become: yes
+    
+
+- name: Enable pipact_backend service at startup
+  systemd:
+    name: pipact_backend
+    enabled: yes 
+    daemon_reload: yes
+    state: started
+  become: yes

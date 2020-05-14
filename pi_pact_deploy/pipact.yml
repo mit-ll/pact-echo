@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  roles:
+    - common
+    - nats
+    - role: geerlingguy.nodejs
+      nodejs_version: "12.x"
+      become: yes
+    # - web_proxy
+    - backend_service
+    - frontend_service
