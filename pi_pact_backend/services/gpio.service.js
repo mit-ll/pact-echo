@@ -77,9 +77,9 @@ module.exports = {
             const beacon = await this.broker.call('beacon.status');
             const system_state = await this.broker.call('system-state.state');
 
-            console.log("Scanner %s\tRecorder %s\tBeacon %s", scanner.running, recorder.running, beacon.running)
-            console.log("Bluetooth: %s", system_state.rf.bluetooth);
-            console.log("WLAN: %s", system_state.rf.wlan);
+            // console.log("Scanner %s\tRecorder %s\tBeacon %s", scanner.running, recorder.running, beacon.running)
+            // console.log("Bluetooth: %s", system_state.rf.bluetooth);
+            // console.log("WLAN: %s", system_state.rf.wlan);
 
             if (scanner.running) {
                 this.blink_once(this.settings.red_pin, 1000);
@@ -95,7 +95,7 @@ module.exports = {
 
             if (system_state.rf.wlan.soft == 'unblocked' &&
                 system_state.rf.wlan.hard == 'unblocked') {
-                console.log("Wi-Fi on");
+                // console.log("Wi-Fi on");
                 setTimeout(this.wifi_on, 1250);
             }
         },

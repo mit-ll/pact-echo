@@ -24,7 +24,6 @@ import fetcher from '../lib/fetcher'
 export default async (req, res, fragment) => {
     const { serverRuntimeConfig } = getConfig();
     const url = `${serverRuntimeConfig.api_loc}/api/${fragment}`;
-    console.log("URL: %s", url);
     try {
         const data = await fetcher(url);
         res.status(200).json(data);

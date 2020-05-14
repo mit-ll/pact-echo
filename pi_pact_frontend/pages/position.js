@@ -30,8 +30,6 @@ export const getServerSideProps = async context => {
     const statusUrl = `http://${host}/api/position/status`;
     const startUrl = `http://${host}/api/position/start`;
     const stopUrl = `http://${host}/api/position/stop`;
-    console.log("server side: %s", positionStatusUrl);
-    console.log("client side: %s", statusUrl);
     try {
         const data = await (fetcher(positionStatusUrl));
         return { props: { data, statusUrl, startUrl, stopUrl } };
