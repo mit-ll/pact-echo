@@ -22,5 +22,5 @@
 import api_proxy from '../../../lib/api_proxy'
 
 export default async (req, res) => {
-    api_proxy(req, res, 'scanner/start');
+    await api_proxy(req, res, 'scanner/start');
 }
