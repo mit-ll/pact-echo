@@ -6,6 +6,9 @@
     - role: geerlingguy.nodejs
       nodejs_version: "12.x"
       become: yes
-    # - web_proxy
     - backend_service
     - frontend_service
+    - rtc
+    - role: infothrill.rpi-boot-config
+      boot_config_lines: ['dtoverlay=i2c-rtc,pcf8523']
+      become: yes

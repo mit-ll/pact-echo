@@ -1,0 +1,26 @@
+- name: Install I2C and NTP packages
+  apt: 
+    name: [python-smbus, i2c-tools, ntpdate, ntp]
+    state: present
+  become: yes
+
+- name: Remove fake-hwclock package
+  apt: 
+    name: fake-hwclock
+    state: absent
+  become: yes
+
+- name: Disable RTC fake-hwclock service
+  systemd:
+    name: fake-hwclock
+    enabled: no
+  become: yes
+
+- name: Copy file to /lib/udev/hwclock-set 
+  copy:
+    src: hwclock-set 
+    dest: /lib/udev/hwclock-set
+    owner: root 
+    group: root
+    mode: '0755'
+  become: yes
