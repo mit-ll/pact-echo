@@ -25,6 +25,14 @@
     group: nodejs
   become: yes
     
+- name: Create position directory
+  file:
+    path: /position
+    state: directory
+    owner: nodejs
+    group: nodejs
+  become: yes
+
 
 - name: Enable pipact_backend service at startup
   systemd:
