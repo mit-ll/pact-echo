@@ -17,6 +17,7 @@
     shell: /bin/false
     system: yes
     group: nodejs
+    groups: gpio
   become: yes 
 
 - name: Create log directory for pipact
