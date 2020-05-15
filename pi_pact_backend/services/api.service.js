@@ -93,6 +93,7 @@ module.exports = {
 					'recorder/stop': 'recorder.stopRecorder',
 					'recorder/files': 'recorder.listFiles',
 					'recorder/file/:filename': 'recorder.getFile',
+					'recorder/lastSeen': 'recorder.lastSeen',
 
 					'beacon/status': 'beacon.status',
 					'beacon/start': 'beacon.startBeacon',

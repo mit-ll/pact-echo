@@ -66,6 +66,11 @@ export default class extends React.Component {
                             <Nav.Link>Position</Nav.Link>
                         </Link>
                     </Nav.Item>
+                    <Nav.Item>
+                        <Link href="/lastSeen" passHref>
+                            <Nav.Link>Last Seen</Nav.Link>
+                        </Link>
+                    </Nav.Item>
                 </Navbar>
                 <React.Fragment>
                     {this.props.children}

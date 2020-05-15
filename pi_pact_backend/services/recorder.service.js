@@ -23,6 +23,9 @@ const winston = require('winston');
 require('winston-daily-rotate-file');
 const fs = require('fs')
 const readline = require('readline');
+
+const lastSeen = {};
+
 module.exports = {
     name: "recorder",
 
@@ -37,14 +40,41 @@ module.exports = {
 
     events: {
         "advertisment.received"(ctx) {
+            const message = ctx.params;
             if (this.settings.running) {
                 console.log("RECORD Advertisment received!")
                 this.settings.logger.log({
                     level: 'info',
-                    message: ctx.params,
+                    message: message,
                     rxMac: this.settings.rxMac
                 })
             }
+
+            const txMac = message.address;
+            const curRssi = message.rssi;
+            const timestamp = new Date().getTime();
+            if (txMac in lastSeen) {
+                const oldRecord = lastSeen[txMac];
+                const newCount = oldRecord.count + 1;
+                lastSeen[txMac] = {
+                    count: newCount,
+                    min: curRssi < oldRecord.min ? curRssi : oldRecord.min,
+                    max: curRssi > oldRecord.max ? curRssi : oldRecord.min,
+                    mean: (oldRecord.count * oldRecord.mean + curRssi) / newCount,
+                    lastSeen: timestamp
+                }
+            } else {
+                //Create new record
+                lastSeen[txMac] = {
+                    count: 1,
+                    min: curRssi,
+                    max: curRssi,
+                    mean: curRssi,
+                    lastSeen: timestamp
+                }
+            }
+
+
         }
     },
 
@@ -105,6 +135,12 @@ module.exports = {
             async handler() {
                 this.settings.running = false;
                 return this.getStatus();
+            }
+        },
+
+        lastSeen: {
+            async handler() {
+                return lastSeen;
             }
         },
 
