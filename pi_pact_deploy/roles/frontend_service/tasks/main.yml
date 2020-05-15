@@ -14,7 +14,7 @@
 - name: Enable pipact_frontend service at startup
   systemd:
     name: pipact_frontend
-    enabled: yes 
+    # enabled: yes 
     daemon_reload: yes
     state: started
   become: yes

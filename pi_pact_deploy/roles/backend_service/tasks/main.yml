@@ -37,7 +37,7 @@
 - name: Enable pipact_backend service at startup
   systemd:
     name: pipact_backend
-    enabled: yes 
+    # enabled: yes 
     daemon_reload: yes
     state: started
   become: yes
