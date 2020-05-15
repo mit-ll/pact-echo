@@ -7,9 +7,9 @@
   command: setcap cap_net_raw+eip /usr/bin/node
   become: yes
 
-- name: Install npm dependencies
-  npm: 
-    path: /home/pi/pipact/pi_pact_backend
+# - name: Install npm dependencies
+#   npm: 
+#     path: /home/pi/pipact/pi_pact_backend
 
 - name: Copy pipact_backend service file
   copy:

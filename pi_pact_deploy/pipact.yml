@@ -10,5 +10,5 @@
     - frontend_service
     - rtc
     - role: infothrill.rpi-boot-config
-      boot_config_lines: ['dtoverlay=i2c-rtc,pcf8523']
+      boot_config_lines: ['dtoverlay=i2c-rtc,ds3231']
       become: yes

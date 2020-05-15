@@ -1,9 +1,9 @@
-- name: Install npm dependencies
-  npm: 
-    path: /home/pi/pipact/pi_pact_frontend
+# - name: Install npm dependencies
+#   npm: 
+#     path: /home/pi/pipact/pi_pact_frontend
 
-- name: Build front end app 
-  command: /home/pi/pipact/pi_pact_frontend/node_modules/next/dist/bin/next build /home/pi/pipact/pi_pact_frontend/
+# - name: Build front end app 
+#   command: /home/pi/pipact/pi_pact_frontend/node_modules/next/dist/bin/next build /home/pi/pipact/pi_pact_frontend/
 
 - name: Copy pipact_frontend service file
   copy:
