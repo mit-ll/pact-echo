@@ -41,9 +41,19 @@ module.exports = {
         const systemId = stateInfo.system.serial;
         this.settings.uuid = `${systemId}${systemId}`;
 
-        bleno.on('stateChange', (state) => {
+        bleno.on('stateChange', (state) => {        
             this.settings.blenoState = state;
+            if (state==='poweredOn') {
+                console.log("stateChange to poweredOn, starting beacon");
+                this.start_beacon();
+            }
+
+            if (state==='poweredOff') {
+                this.settings.running = false;
+            }
         })
+
+        this.start_beacon();
     },
 
     actions: {
@@ -55,17 +65,7 @@ module.exports = {
 
         startBeacon: {
             async handler() {
-                
-                if (this.settings.blenoState==='poweredOn') {
-                    bleno.startAdvertisingIBeacon(this.settings.uuid,
-                        this.settings.major, 
-                        this.settings.minor, 
-                        this.settings.measuredPower, (error) => {
-                            console.log(`Error starting advertising ${error}`);
-                        })
-                    this.settings.running = true;
-                }
-                return this.getStatus();
+                return this.start_beacon();
             }
         },
 
@@ -90,6 +90,23 @@ module.exports = {
                 'measuredPower': this.settings.measuredPower,
                 'blenoState': this.settings.blenoState
             }
+        },
+
+        async start_beacon() {
+            if (this.settings.blenoState==='poweredOn') {
+                bleno.startAdvertisingIBeacon(this.settings.uuid,
+                    this.settings.major, 
+                    this.settings.minor, 
+                    this.settings.measuredPower, (error) => {
+                        if(error) {
+                            console.log(`Error starting advertising ${error}`);
+                        }
+                    })
+                this.settings.running = true;
+            } else {
+                console.log("Not powered on yet");
+            }
+            return this.getStatus();
         }
     }
 }
