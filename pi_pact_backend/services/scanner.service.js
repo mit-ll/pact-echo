@@ -54,22 +54,25 @@ module.exports = {
         noble.on('stopScan', () => {
             console.log("ENDING SCAN");
         })                
+
+        this.start_scanner();
+        this.settings.running = true;
     },
 
     actions: {
         status: {
             async handler() {
-                return { 'running': this.settings.running, 'device': noble.state, 'counter': this.settings.counter, 'lastRxTime': this.settings.lastRxTime };
+                return this.get_status_message();
             }
         },
 
         startScanner: {
             async handler() {
-                    noble.startScanning([], true); //Start scanning with duplicates
+                    this.start_scanner();
                     
                     this.settings.running = true;
 
-                    return { 'running': this.settings.running, 'device': noble.state };
+                    return this.get_status_message();
             }
         },
 
@@ -77,10 +80,20 @@ module.exports = {
             async handler() {
                 noble.stopScanning();
                 this.settings.running = false;
-                return { 'running': this.settings.running, 'device': noble.state };
+                return this.get_status_message();
             }
         }
 
 
+    },
+
+    methods: {
+        get_status_message() {
+            return { 'running': this.settings.running, 'device': noble.state, 'counter': this.settings.counter, 'lastRxTime': this.settings.lastRxTime };
+        },
+
+        start_scanner() {
+            noble.startScanning([], true); //Start scanning with duplicates
+        }
     }
 }

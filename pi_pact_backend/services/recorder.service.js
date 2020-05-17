@@ -26,6 +26,8 @@ const readline = require('readline');
 
 const lastSeen = {};
 
+let counter = 0;
+
 module.exports = {
     name: "recorder",
 
@@ -41,13 +43,13 @@ module.exports = {
     events: {
         "advertisment.received"(ctx) {
             const message = ctx.params;
-            if (this.settings.running) {
-                console.log("RECORD Advertisment received!")
+            if (this.settings.running) {                
                 this.settings.logger.log({
                     level: 'info',
                     message: message,
                     rxMac: this.settings.rxMac
                 })
+                counter ++;
             }
 
             const txMac = message.address;
@@ -218,7 +220,8 @@ module.exports = {
         getStatus() {
             return {
                 'running': this.settings.running,
-                dataDirectory: this.settings.dataDirectory
+                dataDirectory: this.settings.dataDirectory,
+                counter: counter
             };
         },
     }
