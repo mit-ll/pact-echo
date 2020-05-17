@@ -18,16 +18,16 @@
  *  that exist in this work.
  */
 
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import fetcher from '../lib/fetcher'
 import { Table } from 'react-bootstrap'
 import SwitchWithError from '../components/switchWithError'
 import React, { useState } from 'react';
 
-function Position({ initData, url, statusUrl, startUrl, stopUrl }) {
+function Position({ initData, statusUrl, startUrl, stopUrl }) {
     const [curError, setCurError] = useState(null);
-    const { data, err } = useSWR(url, fetcher,
-        { refreshInterval: 1000, initialData: initData });
+    const { data, err } = useSWR(statusUrl, fetcher,
+        { refreshInterval: 5000, initialData: initData });
 
     if (err) return <div>Error {err}</div>
     if (!data) return <div>No data</div>
@@ -42,10 +42,10 @@ function Position({ initData, url, statusUrl, startUrl, stopUrl }) {
         fetch(url)
             .then(r => r.json())
             .then(d => {
-                mutate({ ...data, running: d.running });
+                mutate(statusUrl, { ...data, running: d.running });
             }).catch((error) => {
                 console.error("E %s", error);
-                setCurError(error);
+                setCurError(error);url
             });
     }
 
