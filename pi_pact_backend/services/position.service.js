@@ -77,7 +77,8 @@ module.exports = {
         start: {
             async handler() {
                 try { 
-                    this.connect_to_remote_service();
+                    await this.connect_to_remote_service();
+                    return this.get_status_message();
                 } catch (err) {
                     console.error(err);
                 }
@@ -86,7 +87,12 @@ module.exports = {
 
         stop: {
             async handler() {
-
+                if(this.settings.ws) {
+                    this.settings.ws.close();
+                    this.settings.ws = null;
+                    this.settings.running = false;
+                }
+                return this.get_status_message();
             }
         }
     },
@@ -104,9 +110,9 @@ module.exports = {
         },
 
         connect_to_remote_service() {
-
+            this.settings.ws = new WebSocket(this.settings.url);
             this.settings.ws.on('open', () => {
-                // console.log("opening position web socket");
+                this.settings.running = true;
                 let op = "subscribe";
                 let pose_subscribe_message = { "op": op, "topic": "/robot_pose" }
                 this.settings.ws.send(JSON.stringify(pose_subscribe_message));
