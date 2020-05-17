@@ -65,3 +65,7 @@ typings/
 
 # JetBrains IDE
 .idea
+
+# Python stuff
+__pycache__
+.ipynb_checkpoints
