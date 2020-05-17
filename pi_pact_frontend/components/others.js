@@ -52,8 +52,8 @@ function Others({ nodes }) {
                         </thead>
                         <tbody>
                             {nodes.map((values, index) => {
-                                console.log('V: %s', JSON.stringify(values));
-                                console.log('V: %s', values.ip);
+                                // console.log('V: %s', JSON.stringify(values));
+                                // console.log('V: %s', values.ip);
                                 return <OthersRow key={values.ip} id={values.id} ip={values.ip} refreshTime={refreshTime} />
                             })}
                         </tbody>
