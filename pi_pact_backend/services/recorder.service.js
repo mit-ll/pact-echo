@@ -90,6 +90,7 @@ module.exports = {
 
     async started() {
         //Start recorder by default?
+        this.settings.running = true;
         const stateInfo = await this.broker.call('system-state.state');
         this.settings.systemId = stateInfo.system.serial;
         this.settings.rxMac = stateInfo.bt.hci0;
