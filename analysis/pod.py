@@ -18,7 +18,7 @@
  that exist in this work.
 """
 
-import json, re, sys, tarfile
+import json, os, re, sys
 import pandas as pd
 from scipy.interpolate import interp1d
 import math
@@ -72,93 +72,122 @@ class Pod:
         self.signalData['rx_y'][idx] = self.signalData[idx].ts.apply(fy)
         self.signalData['rx_z'][idx] = self.signalData[idx].ts.apply(fz)
 
-    def AddDataFile(self, filename):
-        if "-ble" in filename:
-            self.AddSignalFile(filename)
-        elif "-position" in filename:
-            self.AddPositionFile(filename)
-        else:
-            print(f"skipping {filename} since it doesn't have ble or position")
+    def LoadFromCheckpoint(self, d):
+        ckdat = f"checkpoint_{self.label}_dat"
+        ckpos = f"checkpoint_{self.label}_pos"
+        self.signalData = pd.read_pickle(os.path.join(d,ckdat))
+        self.positionData = pd.read_pickle(os.path.join(d,ckpos))
+        print(f"loaded checkpoint for {self}")
 
-    def AddSignalFile(self, filename):
-        print(f"adding signal {filename} => {self.label}")
-        if filename.endswith('.tgz') or filename.endswith('.tar.gz'):
-            tar = tarfile.open(filename)
-            for m in tar.getmembers():
-                f = tar.extractfile(m)
-                x = pd.read_json(f,lines=True)
-                if len(x) > 0:
-                    x['ts'] = x.timestamp.apply(lambda x: x.timestamp())
-                    x['address'] = x.message.apply(lambda x: x['address'])
-                    x['rssi'] = x.message.apply(lambda x: x['rssi'])
-                    x['data'] = x.message.apply(self._picker)
-                    #x = x.drop(columns = ['level', 'message', 'timestamp'])
-                    self.signalData = self.signalData.append(x)
-        else:
-            print("Skipping signal file with unknown extension:", filename)
+    def AddDataFile(self, f, path):
+        try:
+            if "/data/" in path:
+                print(f"    adding data file {path}")
+                self.AddSignalFile(f)
+            elif "/position/" in path:
+                print(f"adding position file {path}")
+                self.AddPositionFile(f)
+            else:
+                print(f"skipping {path} since it doesn't have data or position")
+        except Exception:
+            print(f"WARNING: error adding file {path}")
 
-    def AddPositionFile(self, filename):
-        print(f"adding position {filename} => {self.label}")
+    def AddSignalFile(self, f):
+        x = pd.read_json(f,lines=True)
+        if len(x) > 0:
+            x['ts'] = x.timestamp.apply(lambda x: x.timestamp())
+            x['address'] = x.message.apply(lambda x: x['address'])
+            x['rssi'] = x.message.apply(lambda x: x['rssi'])
+            x['data'] = x.message.apply(self._picker)
+            #x = x.drop(columns = ['level', 'message', 'timestamp'])
+            self.signalData = self.signalData.append(x)
+
+    def AddPositionFile(self, f):
         if self.pos != 'ros':
-            print("skipping ROS position file since pod was declared static")
+            print(f"skipping ROS position file since pod was declared static: {self}")
             return
-        if filename.endswith('.tgz') or filename.endswith('.tar.gz'):
-            tar = tarfile.open(filename)
-            for m in tar.getmembers():
-                f = tar.extractfile(m)
-                x = pd.read_json(f,lines=True)
-                if len(x) > 0:
-                    x['ts'] = x.timestamp.apply(lambda x: x.timestamp())
-                    x['x'] = x.message.apply(self._getx)
-                    x['y'] = x.message.apply(self._gety)
-                    x['z'] = x.message.apply(self._getz)
-                    #x = x.drop(columns=['level', 'message', 'timestamp'])
-                    self.positionData = self.positionData.append(x)
-        else:
-            print("Skipping signal file with unknown extension:", filename)
+        x = pd.read_json(f,lines=True)
+        if len(x) > 0:
+            x['ts'] = x.timestamp.apply(lambda x: x.timestamp())
+            x['x'] = x.message.apply(self._getx)
+            x['y'] = x.message.apply(self._gety)
+            x['z'] = x.message.apply(self._getz)
+            #x = x.drop(columns=['level', 'message', 'timestamp'])
+            self.positionData = self.positionData.append(x)
+
+    def TimeSort(self):
+        if len(self.signalData):
+            self.signalData.sort_values(by=['ts'], inplace=True, ignore_index=True)
+        if len(self.positionData):
+            self.positionData.sort_values(by=['ts'], inplace=True, ignore_index=True)
 
     def UpdateLocalSendLocations(self):
         if self.pos.startswith('static:'):
             sfile = self.pos[7:]
-            self.positionData = pd.read_json(sfile, typ='series')
+            self.positionData = pd.read_json(sfile,lines=True)
+            try:
+                self.positionData['x'] = self.positionData['values'][0]['pose']['position']['x']
+                self.positionData['y'] = self.positionData['values'][0]['pose']['position']['y']
+                self.positionData['z'] = self.positionData['values'][0]['pose']['position']['z']
+                self.positionData['ts'] = None
+            except Exception:
+                print(f"WARNING: unable to load static position for {self.label}")
         elif self.pos == 'ros':
-            print(f"INFO: {self} does not log Tx instances")
+            if len(self.positionData) == 0:
+                print(f"ERROR: send Tx locations needs ROS file not provided for {self.label}")
         else:
             sys.exit(f"{self} FIXME: update send locations")
 
     def UpdateLocalReceiveLocations(self):
+        if len(self.signalData) == 0: return
         if self.pos.startswith('static:'):
-            sfile = self.pos[7:]
-            with open(sfile) as f:
-                j = json.load(f)
-                self.positionData['x'] = j['x']
-                self.positionData['y'] = j['y']
-                self.positionData['z'] = j['z']
-                self.positionData['ts'] = None
+            if len(self.positionData) == 0:
+                print(f"ERROR: trying to update static receive locations without first updating static send locations for {self.label}")
+            else:
+                self.signalData['rx_x'] = self.positionData['x']
+                self.signalData['rx_y'] = self.positionData['y']
+                self.signalData['rx_z'] = self.positionData['z']
         elif self.pos == 'ros':
             self._InterpolateReceiveLocations()
         else:
-            sys.exit(f"{self} FIXME: update send locations")
+            sys.exit(f"{self} FIXME: update receive locations")
 
     def UpdateSenderInfo(self, psender):
         print(f"receiver = {self.label}, sender = {psender.label}")
+        if len(self.signalData.index) == 0:
+            print(f"No signal data given for {self}")
+            return
         if not 'tx_x' in self.signalData.columns:
             n = len(self.signalData)
             self.signalData['tx_x'] = pd.Series([None]*n,dtype='float64')
             self.signalData['tx_y'] = pd.Series([None]*n,dtype='float64')
             self.signalData['tx_z'] = pd.Series([None]*n,dtype='float64')
-        if len(self.signalData.index) == 0:
-            print(f"No signal data given for {self}")
-            return
         idx = self.signalData['address'].str.findall(psender.mac, flags=re.IGNORECASE).apply(lambda x: len(x) != 0)
         send_loc = psender.GetPositionAtTimes(self.signalData['ts'][idx])
-        self.signalData['tx_x'][idx] = send_loc['x']
-        self.signalData['tx_y'][idx] = send_loc['y']
-        self.signalData['tx_z'][idx] = send_loc['z']
+        print("==> tx_x dtype is", self.signalData['tx_x'].dtype)
+        self.signalData['tx_x'][idx] = send_loc['x'].astype('float64').tolist()
+        self.signalData['tx_y'][idx] = send_loc['y'].astype('float64').tolist()
+        self.signalData['tx_z'][idx] = send_loc['z'].astype('float64').tolist()
+        print("<== tx_x dtype is", self.signalData['tx_x'].dtype)
+
+    def UpdateTransmitDistances(self):
+        if len(self.signalData) == 0: return
+        nisnan = lambda x: not math.isnan(x)
+        idx = (self.signalData.rx_x.apply(nisnan)) & (self.signalData.tx_x.apply(nisnan))
+        if len(idx):
+            rx = self.signalData['rx_x'][idx]
+            ry = self.signalData['rx_y'][idx]
+            rz = self.signalData['rx_z'][idx]
+            tx = self.signalData['tx_x'][idx]
+            ty = self.signalData['tx_y'][idx]
+            tz = self.signalData['tx_z'][idx]
+            if not 'd' in self.signalData.columns:
+                self.signalData['d'] = pd.Series([None]*len(self.signalData), dtype='float64')
+            self.signalData['d'][idx] = ( (rx-tx)*(rx-tx) + (ry-ty)*(ry-ty) + (rz-tz)*(rz-tz) ).apply(lambda x: math.sqrt(x)).tolist()
 
     def GetPositionAtTimes(self, ts):
+        n = len(ts.index)
         if self.pos.startswith('static:'):
-            n = len(ts.index)
             ret = pd.DataFrame({
                 'x': [self.positionData['x']] * n,
                 'y': [self.positionData['y']] * n,
@@ -166,8 +195,10 @@ class Pod:
             })
             return ret
         else:
-            sys.exit(f"FIXME: get position at times for {self}")
+            print(f"FIXME: get positions at times for {self.label}")
+            return pd.DataFrame({ 'x': None, 'y': None, 'z': None }, index=[0])
 
     def FilterUnknownTx(self):
+        if len(self.signalData) == 0: return
         idx = self.signalData.tx_x.apply(lambda x: not math.isnan(x))
         self.signalData = self.signalData[idx]

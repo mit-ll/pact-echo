@@ -19,27 +19,50 @@
  that exist in this work.
 """
 
-import argparse, experiment
+import argparse, experiment, sys, traceback
 #from logbook import Logger
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--podfile", type=str, help="Pod CSV file", default="pods.csv")
     parser.add_argument("-o", "--out", type=str, help="Write results to output file")
+    parser.add_argument("-r", "--recover", type=str, help="Recover from checkpoint files in given directory")
     parser.add_argument('--filter', dest='filter', action='store_true', help='Filter out signals with Tx location not known')
     parser.add_argument('--no-filter', dest='filter', action='store_false', help="Don't filter signals even if Tx location unknown")
     parser.set_defaults(filter=True)
-    parser.add_argument("datafiles", nargs='+', help="One or more data files")
+    parser.add_argument("datafiles", nargs='*', help="One or more data files")
     args = parser.parse_args()
 
     exp = experiment.Experiment(args.podfile)
-    for f in args.datafiles:
-        exp.AddDataFile(f)
 
-    exp.UpdateLocationInfo()
-    if args.filter:
-        exp.FilterUnknownTx()
+    loaded = False
+    if args.recover:
+        for p in exp.pd_pods['pod'].values:
+            p.LoadFromCheckpoint(args.recover)
+        loaded = True
 
-    if args.out:
-        exp.WriteOutput(args.out)
+    try:
+        if not loaded:
+            if len(args.datafiles) < 1:
+                sys.exit("ERROR: must provide one or more data files or directories")
+            for f in args.datafiles:
+                exp.AddDataFile(f)
+
+        exp.TimeSort()
+        exp.UpdateLocationInfo()
+        if args.filter:
+            exp.FilterUnknownTx()
+
+        if args.out:
+            exp.WriteOutput(args.out)
+
+    except Exception:
+        traceback.print_exc()
+        if not args.recover:
+            print("writing checkpoint files")
+            for p in exp.pd_pods['pod'].values:
+                dat = f"checkpoint_{p.label}_dat"
+                pos = f"checkpoint_{p.label}_pos"
+                p.signalData.to_pickle(dat)
+                p.positionData.to_pickle(pos)
 

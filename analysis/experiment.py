@@ -20,7 +20,7 @@
 import pandas as pd
 import pod
 import scipy.io as sio
-import sys
+import os, sys, tarfile
 
 class Experiment:
     def __init__(self, podfile):
@@ -29,9 +29,37 @@ class Experiment:
         self.pd_pods = csv
 
     def AddDataFile(self, filename):
-        idx = self.pd_pods.label.apply(lambda x: f"{x}-" in filename)
-        for p in self.pd_pods['pod'][idx]:
-            p.AddDataFile(filename)
+        # idx = self.pd_pods.label.apply(lambda x: f"{x}-" in filename)
+        # for p in self.pd_pods['pod'][idx]:
+        #     p.AddDataFile(filename)
+        if os.path.isdir(filename):
+            for root, dirs, files in os.walk(filename):
+                for name in files:
+                    path = os.path.join(root, name)
+                    idx = self.pd_pods.label.apply(lambda x: f"/{x}/" in path)
+                    for p in self.pd_pods['pod'][idx]:
+                        with open(path) as f:
+                            p.AddDataFile(f, path)
+        elif os.path.isfile(filename):
+            if filename.endswith('.tar.gz') or filename.endswith('.tgz'):
+                tar = tarfile.open(filename)
+                for m in tar.getmembers():
+                    if m.isfile():
+                        f = tar.extractfile(m)
+                        idx = self.pd_pods.label.apply(lambda x: f"/{x}/" in m.name)
+                        for p in self.pd_pods['pod'][idx]:
+                            p.AddDataFile(f, m.name)
+            elif filename.endswith('.json'):
+                idx = self.pd_pods.label.apply(lambda x: f"/{x}/" in filename)
+                for p in self.pd_pods['pod'][idx]:
+                    with open(filename) as f:
+                        p.AddDataFile(f, filename)
+        else:
+            print(f"WARNING: skipping file I don't know how to handle: {filename}")
+
+    def TimeSort(self):
+        for p in self.pd_pods['pod']:
+            p.TimeSort()
 
     def UpdateLocationInfo(self):
             for p in self.pd_pods['pod']:
@@ -43,22 +71,26 @@ class Experiment:
                     if p != psender:
                         p.UpdateSenderInfo(psender)
 
+            for p in self.pd_pods['pod']:
+                p.UpdateTransmitDistances()
+
     def FilterUnknownTx(self):
         for p in self.pd_pods['pod']:
             p.FilterUnknownTx()
     
     def WriteOutput(self, filename):
-        sigvars = ['rssi', 'address', 'rx_x', 'rx_y', 'rx_z', 'tx_x', 'tx_y', 'tx_z']
-        #sigvars = ['rssi', 'rx_x', 'rx_y', 'rx_z', 'tx_x', 'tx_y', 'tx_z']
+        sigvars = ['ts', 'rssi', 'address', 'rx_x', 'rx_y', 'rx_z', 'tx_x', 'tx_y', 'tx_z', 'd']
+        #sigvars = ['ts', 'rssi', 'rx_x', 'rx_y', 'rx_z', 'tx_x', 'tx_y', 'tx_z', 'd']
         if filename.endswith('.mat'):
             m = {}
             for p in self.pd_pods['pod']:
                 print("len signalData is ", len(p.signalData))
+                label = p.label.replace('-','_')
                 if len(p.signalData):
-                    m[p.label] = {name: col.values for name, col in p.signalData[sigvars].items()}
-                    m[p.label]['mac'] = p.mac
+                    m[label] = {name: col.values for name, col in p.signalData[sigvars].items()}
+                    m[label]['mac'] = p.mac
                 else:
-                    m[p.label] = {'mac': p.mac}
+                    m[label] = {'mac': p.mac}
                     #m[p.label] = pd.DataFrame(columns=sigvars)
             sio.savemat(filename, m)
         else:
