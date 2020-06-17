@@ -1,0 +1,18 @@
+{
+  "name": "database_ingest",
+  "version": "1.0.0",
+  "description": "Script to read data recorded with pipact into sqlite database.  The script looks for files with the .json extension and attempts to parse them.  If the script successfully detects a RSSI data file or a position file, the contents are loaded into the sqlite database.",
+  "main": "loadDirectory.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^5.1.0",
+    "deep-parse-json": "^1.0.1",
+    "sqlite3": "^4.2.0",
+    "winston": "^3.2.1"
+  }
+}

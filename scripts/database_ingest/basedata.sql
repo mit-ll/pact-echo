@@ -1,0 +1,20 @@
+INSERT INTO PiPactNodes(id, label, bluetooth_mac)
+VALUES
+  (10, 'pipcat-10', "B8:27:EB:79:8D:D1"),
+  (11, "pipact-11", "B8:27:EB:30:8C:69"),
+  (12, "pipact-12", "B8:27:EB:DA:6F:78"),
+  (13, "pipact-13", "B8:27:EB:CC:80:52"),
+  (14, "pipact-14", "B8:27:EB:7D:22:9B"),
+  (15, "pipact-15", "B8:27:EB:67:F5:5E"),
+  (16, "pipact-16", "B8:27:EB:0A:26:3C"),
+  (17, "pipact-17", "B8:27:EB:0A:7E:5C"),
+  (18, "pipact-18", "B8:27:EB:90:CE:54"),
+  (19, "pipact-19", "B8:27:EB:4C:C3:62"),
+  (20, "pipact-20", "B8:27:EB:2E:79:90"),
+  (21, "pipact-21", "B8:27:EB:A7:50:20"),
+  (22, "pipact-22", "B8:27:EB:2A:95:81"),
+  (23, "pipact-23", "B8:27:EB:E8:3D:98"),
+  (24, "pipact-24", "B8:27:EB:7C:EC:7B"),
+  (25, "pipact-25", "B8:27:EB:67:6E:46"),
+  (26, "pipact-26", "B8:27:EB:CC:FA:4D"),
+  (27, "pipact-27", "B8:27:EB:96:E9:0F");
