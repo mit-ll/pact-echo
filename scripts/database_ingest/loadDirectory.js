@@ -145,6 +145,7 @@ const findFilesToProcess = async (directory) => {
 
 const processFile = async (dataFile, db, macToId) => {
     logger.silly(`processFile(${dataFile})`);
+    const numNodes = Object.keys(macToId).length;
     let fileId = await getFileInfoFromDB(dataFile, db);
     let fileType = -1;
     switch (fileId) {
@@ -182,7 +183,7 @@ const processFile = async (dataFile, db, macToId) => {
                         jsonLine.message.rssi,
                         jsonLine.message.address.toUpperCase(),
                         fileId)
-                } else if (macToId.length > 0 && jsonLine && jsonLine.message && jsonLine.message.msg.position) {
+                } else if (numNodes > 0 && jsonLine && jsonLine.message && jsonLine.message.msg.position) {
                     fileType = 1;
                     logger.silly(`Position Line: ${JSON.stringify(jsonLine)}`);
                     if (nodeId == null) {
@@ -243,6 +244,7 @@ const doWork2 = async (directory, database) => {
     const step = Math.floor(ftpl / 100);
     const macToId = await getNodes(db);
     logger.info(`Found ${ftpl} .json files to process`);
+    logger.info(`Found ${Object.keys(macToId).length} pipact nodes`);
     for (var i = 0; i < ftpl; i++) {
         const curFile = filesToProcess[i];
         await processFile(curFile, db, macToId);
