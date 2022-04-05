@@ -13,12 +13,15 @@ Raspberry Pi based test fixture for development and test of Bluetooth low energy
     : Set of standalone scripts to validate/test software library support for specific features
 
 ---
-DISTRIBUTION STATEMENT A. Approved for public release. Distribution is unlimited.
- 
-This material is based upon work supported by the United States Air Force under Air Force Contract No. FA8702-15-D-0001. Any opinions, findings, conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Air Force.
- 
-© 2020 Massachusetts Institute of Technology.
- 
+## Disclaimer
+
+DISTRIBUTION STATEMENT A. Approved for public release: distribution unlimited.
+
+© 2020 MASSACHUSETTS INSTITUTE OF TECHNOLOGY
+
+    Subject to FAR 52.227-11 – Patent Rights – Ownership by the Contractor (May 2014)
+    SPDX-License-Identifier: MIT
+
+This material is based upon work supported by the United States Air Force under Air Force Contract No. FA8721-05-C-0002 and/or FA8702-15-D-0001. Any opinions, findings, conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the Name of United States Air Force.
+
 The software/firmware is provided to you on an As-Is basis
- 
-Delivered to the U.S. Government with Unlimited Rights, as defined in DFARS Part 252.227-7013 or 7014 (Feb 2014). Notwithstanding any copyright notice, U.S. Government rights in this work are defined by DFARS 252.227-7013 or DFARS 252.227-7014 as detailed above. Use of this work other than as specifically authorized by the U.S. Government may violate any copyrights that exist in this work.
